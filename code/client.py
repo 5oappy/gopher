@@ -1,5 +1,13 @@
+#client.py
+
 import socket
 import time
+"""
+It's already up: https://gopher.floodgap.com/gopher/gw?gopher://comp3310.ddns.net:70/1
+
+Host is: comp3310.ddns.net
+Port is 70
+"""
 
 class GopherClient:
     def __init__(self, server_host, server_port):
@@ -34,13 +42,17 @@ class GopherClient:
 
     def run(self):
         # Implement main logic to connect, scan directories, download files, and print statistics
-        pass
+        self.connect()
+        initial_response = self.receive_response()
+        print("Initial Response:", initial_response)
+        self.close()
 
-if __name__ == "__main__":
-    # Set server host and port
-    server_host = "your_server_host"
-    server_port = 70  # Gopher server port
+
+# if __name__ == "__main__":
+#     # Set server host and port
+#     server_host = "your_server_host"
+#     server_port = 70  # Gopher server port
     
-    # Create and run the client
-    client = GopherClient(server_host, server_port)
-    client.run()
+#     # Create and run the client
+#     client = GopherClient(server_host, server_port)
+#     client.run()
