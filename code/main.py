@@ -1,9 +1,10 @@
 #main.py
-import controller
+from controller import *
 import client
 
-def main():
-    controller.run()
 
+def main():
+    run()
+    
 if __name__ == "__main__":
     main()
