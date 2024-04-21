@@ -1,6 +1,7 @@
 #client.py
 import socket
 import time
+from parser import Parser
 """
 site: https://gopher.floodgap.com/gopher/gw?gopher://comp3310.ddns.net:70/1
 
@@ -17,15 +18,18 @@ class GopherClient:
     def connect(self):
         self.socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.socket.connect((self.server_host, self.server_port))
-        print("Connected to server.")
+        timestamp = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
+        print("Timestamp:", timestamp)
     
     def close(self):
         if self.socket:
             self.socket.close()
+            print("Socket closed")
     
     def send_request(self, request):
         if self.socket:
             self.socket.sendall(request.encode())
+            print("Request: ", request)
 
     def receive_response(self):
         if self.socket:
@@ -41,12 +45,21 @@ class GopherClient:
         pass
 
     def run(self):
-        # Implement main logic to connect, scan directories, download files, and print statistics
         self.connect()
+        self.intialise() ## testing
+       
+    
+    def intialise(self):
         empty = "\r\n"
         self.send_request(empty)
         initial_response = self.receive_response()
-        print("Initial Response:", initial_response)
-        self.close()
-        print("Connection Closed")
-
+        print(initial_response)
+        # Parser.parse(initial_response)
+    
+                
+"""
+empty = "\r\n"
+self.send_request(empty)
+initial_response = self.receive_response()
+print("Initial Response:", initial_response)
+"""

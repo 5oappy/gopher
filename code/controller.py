@@ -2,9 +2,19 @@
 from client import GopherClient
 
 def run():
-
     client = GopherClient('comp3310.ddns.net', 70)
-    client.run()
+    client.connect()
+    client.intialise()
+    try:
+        while True:
+            # Perform Gopher client operations here
+            user_input = input("Enter 'r' to run client, 'b' to exit program, 's' to scan: ")
+            if user_input.lower() == 'r':
+                client.run()  # Break out of the loop if 'b' is entered
+            if user_input.lower() == 'b':
+                break
+    finally:
+        client.close()
     
 def scan_directory(self, directory):
     self.send_request(directory)
