@@ -22,23 +22,33 @@ class Parser:
     def parse_response(self):
         print("Reached parser")
         lines = self.input.split('\n')
+      
         options = []
-        print("splited")
+        print("start loop")
         for line in lines:
-            print("starting new line")
-            parts = line.split('\t')
-            if len(parts) >= 5:
-                option_type = parts[0]
-                name = parts[1]
-                selector = parts[2]
-                host = parts[3]
-                port = parts[4]
-                options.append({'type': option_type, 'name': name, 'selector': selector, 'host': host, 'port': port})
-                print("Option:", options)
+            if line.startswith('0') or line.startswith('1'):
+                parts = line.split('\t')
+                if len(parts) >= 4:
+                    option = self.parse_option(parts)
+                    options.append(option)
+                # print("Option:", option)
         return options
 
-
-    
+    def parse_option(self, parts):
+        option_type = parts[0][0]
+        # print(parts[0][0])
+        name = parts[0].strip()
+        # print(parts[0])
+        selector = parts[1].strip()
+        # print(parts[1])
+        host = parts[2].strip()
+        # print(parts[2])
+        port = parts[3].strip()
+        # print(parts[3])
+        option = {'type': option_type, 'name': name, 'selector': selector, 'host': host, 'port': port}
+        # print(option)
+        return option
+        
     def extract_paths(self):
         paths = []
         for line in self.input.split('\n'):
