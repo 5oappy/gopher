@@ -2,70 +2,78 @@
 import socket
 import os
 
-class Stats:
+class Statistics:
     def __init__(self):
-        self.gopher_dirs = 0
-        self.simple_text_files = []
-        self.binary_files = []
+        self.gopher_dirs = 0 #
+        self.simple_text_files = [] #
+        self.binary_files = [] #
         self.smallest_text_file_content = None
         self.largest_text_file_size = float('-inf')
         self.smallest_binary_file_size = float('inf')
         self.largest_binary_file_size = float('-inf')
         self.unique_invalid_references = set()
         self.external_servers = {}
-
-    def count_gopher_dirs(self, options):
-        for option in options:
-            if option['type'] == '1':
-                self.gopher_dirs += 1
-
-    def find_text_and_binary_files(self, selector):
-            if selector.endswith('.txt'):
-                self.simple_text_files.append(selector)
-                return True
-            else:
-                self.binary_files.append(selector)
-                return False
-
     
-
+    def add_binary_file(self, path):
+        self.binary_files.append(path)
+        
+        
+    def add_simple_text_file(self, path):
+        self.simple_text_files.append(path)
+        
+        
+    def increment_dirs(self):
+        self.gopher_dirs += 1
+        
+        
+    def add_external(self, selector, status):
+        self.external_servers[selector] = status
+        
+    
     def get_file_sizes(self):
+        # Iterate through each file path in simple_text_files and binary_files
         for file_path in self.simple_text_files + self.binary_files:
-            file_size = os.path.getsize(file_path)
-            if file_path.endswith('.txt'):
+            file_size = os.path.getsize(file_path)  # Get the size of the file
+
+            if file_path.endswith('.txt'):  # If it's a text file
+                # Update largest_text_file_size if the current file size is larger
                 if file_size > self.largest_text_file_size:
                     self.largest_text_file_size = file_size
+                
+                # Open the text file and read its content
                 with open(file_path, 'r') as file:
                     content = file.read()
+                    # Update smallest_text_file_content if the current content is smaller
                     if self.smallest_text_file_content is None or len(content) < len(self.smallest_text_file_content):
                         self.smallest_text_file_content = content
-            else:
+            else:  # If it's a binary file
+                # Update largest_binary_file_size if the current file size is larger
                 if file_size > self.largest_binary_file_size:
-                    self.largest_binary_file_size = file_size
+                    self.largest_binary_fileZ
                 if file_size < self.smallest_binary_file_size:
                     self.smallest_binary_file_size = file_size
 
-    def check_invalid_references(self, options):
-        for option in options:
-            if option['type'] == 'error':
-                self.unique_invalid_references.add(option['selector'])
+        # Print the results
+        print("Contents of the smallest text file:", self.smallest_text_file_content)
+        print("Size of the largest text file:", self.largest_text_file_size)
+        print("Size of the smallest binary file:", self.smallest_binary_file_size)
+        print("Size of the largest binary file:", self.largest_binary_file_size)
+        
 
-    def check_external_servers(self, options):
-        for option in options:
-            host = option['host']
-            port = option['port']
-            if (host, port) not in self.external_servers:
-                try:
-                    with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
-                        s.settimeout(2)  # Timeout for connection attempt
-                        s.connect((host, int(port)))
-                    self.external_servers[(host, port)] = True  # Server is up
-                except (socket.timeout, ConnectionRefusedError):
-                    self.external_servers[(host, port)] = False  # Server is down
+    # def check_invalid_references(self, options):
+    #     for option in options:
+    #         if option['type'] == 'error':
+    #             self.unique_invalid_references.add(option['selector'])
 
-    def analyze_references(self, options):
-        self.count_gopher_dirs(options)
-        self.find_text_and_binary_files(options)
+    
+    def analyse_references(self):
+        print("Stats: ", '\n')
+        print("Number of gohper directories on the server:", self.gopher_dirs)
+        
+        print("Number of simple text files:", len(self.simple_text_files),"List of full paths:", self.simple_text_files)
+        
+        print("Number of simple binary files:", len(self.binary_files),"List of full paths:",self.binary_files)
+        
         self.get_file_sizes()
-        self.check_invalid_references(options)
-        self.check_external_servers(options)
+        #self.check_invalid_references(options)
+        print("List of external servers:", self.external_servers)

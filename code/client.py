@@ -3,8 +3,9 @@ import socket
 import os
 import time
 from parser import Parser
+from statistics import Statistics
 import statistics as s
-stats_instance = s.Stats()
+stat_inst = Statistics()
 """
 site: https://gopher.floodgap.com/gopher/gw?gopher://comp3310.ddns.net:70/1
 
@@ -73,11 +74,13 @@ class GopherClient:
                 with open(save_path, 'w') as file:  # Open in text mode for text files
                     file.write(response)
                 print("Text file downloaded successfully")
+                stat_inst.add_simple_text_file(selector)
             else:
                 print("Downloading binary file...")
                 with open(save_path, 'wb') as file:  # Open in binary mode for binary files
                     file.write(response.encode())  # Encode the string response to bytes
                 print("Binary file downloaded successfully")
+                stat_inst.add_binary_file(selector)
             
             print(f"File saved to: {save_path}")
             
@@ -89,14 +92,17 @@ class GopherClient:
             self.close()
             
             
-    def crawl(self, selector="", visited=set(), stats=None):
+    def crawl(self, selector="", visited=set()):
         self.initialise(selector)
         options = self.parser.parse_response()
 
         for option in options:
             if option['type'] == '1':  # Directory
+                stat_inst.increment_dirs()
                 # Check if external server
                 if option['host'] != self.server_host:
+                    status = self.check_status(option['host'], int(option['port']))
+                    stat_inst.add_external(option['selector'], status)
                     continue
                 # Check if id exist in visited
                 check = self.checkVisted(option['selector'], option['host'], option['port'])
@@ -106,14 +112,15 @@ class GopherClient:
                 self.visited.add(check)
                 
                 print("Crawling into directory:", option['name']) 
-                self.crawl(option['selector'], self.visited, stats)
+                self.crawl(option['selector'], self.visited)
+                
             elif option['type'] == '0':  # File or resource
                 print("Downloading file:", option['name'])
                 download_client = GopherClient(option['host'], int(option['port']))
                 download_client.download_file(option['selector'])
                 
         self.close()
-        
+        stat_inst.analyse_references()
        
     def run(self):
         self.initialise("")
@@ -150,8 +157,13 @@ class GopherClient:
         print(response)
         
         
-    def check_external(self, host):
-        if self.server_host != host:
-            return True
-        return False
+    def check_status(self, host, port):
+        try:
+            ext_client = GopherClient(host, port)
+            ext_client.connect()
+            ext_client.close()
+            return True  # Server is external and accessible
+        except ConnectionError:
+            return False  # Server is down or not accessible
+
     
