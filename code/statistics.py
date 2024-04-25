@@ -14,9 +14,6 @@ class Stats:
         self.unique_invalid_references = set()
         self.external_servers = {}
 
-
-
-
     def count_gopher_dirs(self, options):
         for option in options:
             if option['type'] == '1':

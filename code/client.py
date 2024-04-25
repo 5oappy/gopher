@@ -1,8 +1,10 @@
 #client.py
 import socket
+import os
 import time
 from parser import Parser
-import stats as file_stats
+import statistics as s
+stats_instance = s.Stats()
 """
 site: https://gopher.floodgap.com/gopher/gw?gopher://comp3310.ddns.net:70/1
 
@@ -34,81 +36,59 @@ class GopherClient:
         if self.socket:
             self.socket.sendall((request + "\r\n").encode())
             
-
+    
     def receive_response(self):
         if self.socket:
             try:
-                response = self.socket.recv(4096).decode()
+                # Initialize an empty string to store the response
+                response = ""
+                # Receive data in chunks until all data is received
+                while True:
+                    chunk = self.socket.recv(4096).decode()  # Receive a chunk of data
+                    if not chunk:  # Check if no more data is received
+                        break
+                    response += chunk  # Append the chunk to the response
                 return response
             except socket.timeout:
                 print("Response: (timeout)")
                 return "empty"
+            except Exception as e:
+                print("Error receiving response:", e)
+                return "error"
 
-            
-
-    def scan_directory(self, directory):
-        # Implement directory scanning logic here
-        
-        pass
 
     def download_file(self, selector):
         print("Reached downloader")
         try:
             self.connect()
-            print("connected")
             print("Sent request:", selector)
             self.send_request(selector)
             response = self.receive_response()
             print("Received response")
             
             # Check if the file is text or binary
+            save_path = os.path.join('downloads', os.path.basename(selector))
             if selector.endswith('.txt'):
                 print("Downloading text file...")
-                print(response)  # Print or process the text file content
+                with open(save_path, 'w') as file:  # Open in text mode for text files
+                    file.write(response)
+                print("Text file downloaded successfully")
             else:
                 print("Downloading binary file...")
-                # Implement logic to save or process binary file content
-                
+                with open(save_path, 'wb') as file:  # Open in binary mode for binary files
+                    file.write(response.encode())  # Encode the string response to bytes
+                print("Binary file downloaded successfully")
+            
+            print(f"File saved to: {save_path}")
+            
         except Exception as e:
             print("Error:", e)
             # Handle exceptions gracefully
 
         finally:
             self.close()
-        
-       
-    def run(self):
-        options = self.parser.extract_paths()
-        print("Select from the following options:")
-        for option in options:
-            print(option)
-
-        user_input = input("Enter your choice: ")
-        
-        if user_input:
-            self.connect()
-            self.send_request(user_input)
-            response = self.receive_response()
-            self.parser = Parser(response)
-            print("Response:",response)
-    
-    def checkVisted(self, selector, host, port):
-        id = host + str(port) + selector
-        if id in self.visited:
-            return True
-        return id
-        
-        
-    def initialise(self, selector):
-        self.connect()
-        print("Request: ", selector)
-        self.send_request(selector)
-        response = self.receive_response()
-        self.parser = Parser(response)
-        print(response)
-
-
-
+            
+            
     def crawl(self, selector="", visited=set(), stats=None):
         self.initialise(selector)
         options = self.parser.parse_response()
@@ -131,34 +111,47 @@ class GopherClient:
                 print("Downloading file:", option['name'])
                 download_client = GopherClient(option['host'], int(option['port']))
                 download_client.download_file(option['selector'])
-
-
+                
         self.close()
+        
+       
+    def run(self):
+        self.initialise("")
+        options = self.parser.extract_paths()
+        print("Select from the following options:")
+        for option in options:
+            print(option)
 
+        user_input = input("Enter your choice: ")
+        
+        if user_input:
+            self.connect()
+            self.send_request(user_input)
+            response = self.receive_response()
+            self.parser = Parser(response)
+            print("Response:",response)
+            if user_input.endswith('.txt'):
+                self.download_file(user_input)
+    
+    
+    def checkVisted(self, selector, host, port):
+        id = host + str(port) + selector
+        if id in self.visited:
+            return True
+        return id
 
-
-    def check_external(self, host, port):
+        
+    def initialise(self, selector):
+        self.connect()
+        print("Request: ", selector)
+        self.send_request(selector)
+        response = self.receive_response()
+        self.parser = Parser(response)
+        print(response)
+        
+        
+    def check_external(self, host):
         if self.server_host != host:
             return True
-        elif self.server_port != port:
-            return True
         return False
-
-
-        # do stuff
-     
     
-    # def intialise(self):
-    #     self.send_request("")
-    #     initial_response = self.receive_response()
-    #     self.parser = Parser(initial_response)
-    #     print(initial_response)
-        
-    
-                
-"""
-empty = "\r\n"
-self.send_request(empty)
-initial_response = self.receive_response()
-print("Initial Response:", initial_response)
-"""

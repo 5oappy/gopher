@@ -5,20 +5,6 @@ class Parser:
         # self.filter = filter
         self.input = input_text
         
-
-    def parse(self):
-        pass
-
-    # def filter_invalid_lines(self):
-    #     filtered_lines = [line for line in self.input.split('\n') if "invalid 0" not in line]
-    #     return '\n'.join(filtered_lines)
-    
-    # def parse_item(self, item_line):
-    #     item_type = item_line[0]
-    #     description = item_line[1:-1].strip()
-    #     selector, host, port = item_line.split('\t')[-3:]
-    #     return GopherItem(item_type, description, selector, host, int(port))
-    
     def parse_response(self):
         print("Reached parser")
         lines = self.input.split('\n')
