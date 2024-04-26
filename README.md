@@ -19,7 +19,7 @@ simply run the main.py file from your chosen terminal or preffered python ide.
 command:
 python3 ~/`<path to extracted zip file or cloned repo>`/gopher/code/main.py
 
-Follow the terminal instructions to utilise the tool more info at [interactions](##Intercations) section.
+Follow the terminal instructions to utilise the tool more info at [interactions](#Intercations) section.
 
 If there is a break ensure the client is properly instantiated as there may be a chance that the specified server is no longer availible at which you will have to modify the code and provide your own server host and port.
 
