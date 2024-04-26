@@ -5,6 +5,30 @@ import shutil
 terminal_size = shutil.get_terminal_size().columns
 
 class FileStats:
+    """
+    A class for tracking statistics of files and directories in a Gopher server.
+
+    Attributes:
+        gopher_dirs (int): Number of Gopher directories on the server.
+        simple_text_files (list): List of paths of simple text files.
+        binary_files (list): List of paths of binary files.
+        smallest_text_file_content (str): Contents of the smallest text file.
+        largest_text_file_size (int): Size of the largest text file.
+        smallest_binary_file_size (int): Size of the smallest binary file.
+        largest_binary_file_size (int): Size of the largest binary file.
+        unique_invalid_references (list): List of unique invalid references.
+        external_servers (dict): Dictionary containing external servers and their status.
+
+    Methods:
+        add_binary_file(path): Adds a binary file to the list of binary files.
+        add_simple_text_file(path): Adds a simple text file to the list of simple text files.
+        increment_dirs(): Increments the count of Gopher directories.
+        add_external(host, port, status): Adds an external server to the list of external servers.
+        update_text_file_stats(content): Updates statistics for text files.
+        update_binary_file_stats(file_size): Updates statistics for binary files.
+        add_invalid_references(path): Adds an invalid reference to the list of unique invalid references.
+        analyse_references(): Analyzes and prints statistics for file references.
+    """
     def __init__(self):
         self.gopher_dirs = 0 
         self.simple_text_files = [] 

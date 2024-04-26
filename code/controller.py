@@ -2,6 +2,24 @@
 import os
 from client import GopherClient
 
+"""
+Controller Module
+=================
+
+This module serves as the controller for interacting with the Gopher client and managing file downloads.
+
+Attributes:
+    server_host (str): The hostname of the Gopher server.
+    server_port (int): The port number of the Gopher server.
+    downloads_path (str): The path to the downloads directory.
+
+Functions:
+    run(): Starts the Gopher client and handles user inputs.
+    purge_downloads(): Purges all files in the downloads directory.
+    check_download_path(): Checks if the downloads directory exists and creates it if not.
+
+"""
+
 server_host = 'comp3310.ddns.net'
 server_port = 70
 downloads_path = os.path.join(os.path.dirname(__file__), '..', 'downloads')
@@ -11,7 +29,7 @@ def run():
     check_download_path()
     try:
         while True:
-            # Perform Gopher client operations here
+
             user_input = input("Enter 'c' to crawl, Enter 'r' to manually traverse, 'b' to exit program, 'x' to purge downloads: ")
             if user_input.lower() == 'c':
                 print("Crawling..")
@@ -21,11 +39,10 @@ def run():
             if user_input.lower() == 'r':
                 client.run()
                 print("running")
-            
+
             if user_input.lower() == 'x':
                 purge_downloads()
-                
-            # Break out of the loop if 'b' is entered    
+
             if user_input.lower() == 'b':
                 break
     finally:

@@ -7,7 +7,6 @@ import file_stats as s
 
 """
 site: https://gopher.floodgap.com/gopher/gw?gopher://comp3310.ddns.net:70/1
-
 Host: comp3310.ddns.net
 Port: 70
 """
@@ -75,6 +74,15 @@ class GopherClient:
     
 
     def download_text_file(self, selector):
+        """
+        Downloads a text file from the Gopher server.
+
+        Args:
+            selector (str): The selector string for the file to be downloaded.
+
+        Returns:
+            None
+        """
         try:
             self.connect()
             print("Sent request:", selector)
@@ -97,6 +105,15 @@ class GopherClient:
             self.close()
             
     def download_binary_file(self, selector):
+        """
+        Downloads a binary file from the Gopher server.
+
+        Args:
+            selector (str): The selector string for the file to be downloaded.
+
+        Returns:
+            None
+        """
         try:
             self.connect()
             self.send_request(selector)
@@ -118,6 +135,15 @@ class GopherClient:
             self.close()
             
     def crawl(self, selector=""):
+        """
+        Crawls through the Gopher directories recursively.
+
+        Args:
+            selector (str, optional): The selector string for the directory to start crawling from. Defaults to "".
+
+        Returns:
+            None
+        """
         self.initialise(selector)
         self.visited.add("")
         options = self.parser.parse_response()
@@ -159,6 +185,12 @@ class GopherClient:
 
        
     def run(self):
+        """
+        Runs the Gopher client, allowing user interaction.
+
+        Returns:
+            None
+        """
         self.initialise("")
         options = self.parser.extract_paths()
         print("Select from the following options:")
@@ -185,6 +217,17 @@ class GopherClient:
     
     
     def checkVisted(self, selector, host, port):
+        """
+        Checks if a directory has been visited.
+
+        Args:
+            selector (str): The selector string for the directory.
+            host (str): The hostname of the Gopher server.
+            port (int): The port number of the Gopher server.
+
+        Returns:
+            str or bool: The identifier for the visited directory, or True if already visited.
+        """
         id = host + str(port) + selector
         if id in self.visited:
             return True
@@ -192,6 +235,15 @@ class GopherClient:
 
         
     def initialise(self, selector):
+        """
+        Initializes the client and parser.
+
+        Args:
+            selector (str): The selector string for the initial request.
+
+        Returns:
+            None
+        """
         self.connect()
         print("Request: ", selector)
         self.send_request(selector)
@@ -201,6 +253,16 @@ class GopherClient:
         
         
     def check_status(self, host, port):
+        """
+        Checks the status of an external server.
+
+        Args:
+            host (str): The hostname of the external server.
+            port (int): The port number of the external server.
+
+        Returns:
+            bool: True if the server is external and accessible, False otherwise.
+        """
         try:
             ext_client = GopherClient(host, port)
             ext_client.connect()
