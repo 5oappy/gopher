@@ -153,3 +153,6 @@ many of these decisons are reflected within the file sats:
 [wireshark stats within initial crawl](photos/wireshark2.png)
 
 [wire shark stats after executing crawl and downloading all files](photos/wireshark3.png)
+
+## Author
+Steven Nguyen u7108792
