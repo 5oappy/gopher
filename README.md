@@ -147,11 +147,9 @@ many of these decisons are reflected within the file sats:
 - Servers may send infinitely long data to hog the client whether it be simply bad code server side or bad actors keeping the connection open to pass through malicious pakages, in all cases it is best to simply time the receiving connection if it has taken longer than usual. This may not be as accurate as a checksum, however, will function well enough for obvious sittuations.
 
 ## wire Shark
-wireshark setup and ready to listen to gopher
-[Alt text](photos/wireshark1.png)
 
-wireshark stats within initial crawl
-[Alt text](photos/wireshark2.png)
+[wireshark setup and ready to listen to gopher](photos/wireshark1.png)
 
-wire shark stats after executing crawl and downloading all files
-[Alt text](photos/wireshark3.png)
+[wireshark stats within initial crawl](photos/wireshark2.png)
+
+[wire shark stats after executing crawl and downloading all files](photos/wireshark3.png)
