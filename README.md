@@ -1,5 +1,8 @@
 # gopher
 
+
+
+
 ## Requirements
 What your successful and highly-rated indexing client will need to do:
 1. Connect to the class gopher server, and get the initial response.
