@@ -1,6 +1,8 @@
 
 import socket
 import os
+import shutil
+terminal_size = shutil.get_terminal_size().columns
 
 class FileStats:
     def __init__(self):
@@ -50,7 +52,7 @@ class FileStats:
     
     def analyse_references(self):
 
-        print("################################################################")
+        print("#" * terminal_size)
         print("Stats: ", '\n')
         print("Number of gohper directories on the server:", self.gopher_dirs,'\n')
         
@@ -69,4 +71,4 @@ class FileStats:
 
         print("List of external servers:", self.external_servers, '\n')
 
-        print("################################################################")
+        print("#" * terminal_size)
