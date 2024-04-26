@@ -1,5 +1,21 @@
 # gopher
+welcome to the last Gopher client you'll ever cry about 
 
+## Classes
+
+### GopherClient
+
+### Parser
+
+### FileStats
+
+## Methods
+
+## Intercations
+
+## Parser design
+
+## Setup
 
 
 

@@ -4,9 +4,9 @@ import os
 
 class FileStats:
     def __init__(self):
-        self.gopher_dirs = 0 #
-        self.simple_text_files = [] #
-        self.binary_files = [] #
+        self.gopher_dirs = 0 
+        self.simple_text_files = [] 
+        self.binary_files = [] 
         self.smallest_text_file_content = None
         self.largest_text_file_size = float('-inf')
         self.smallest_binary_file_size = float('inf')
@@ -19,15 +19,16 @@ class FileStats:
         
         
     def add_simple_text_file(self, path):
-        self.simple_text_files.append(path)
+        if path not in self.simple_text_files:
+            self.simple_text_files.append(path)
         
         
     def increment_dirs(self):
         self.gopher_dirs += 1
         
         
-    def add_external(self, selector, status):
-        self.external_servers[selector] = status
+    def add_external(self, host, port, status):
+        self.external_servers[host, port] = status
         
 
     def update_text_file_stats(self, content):
@@ -48,18 +49,24 @@ class FileStats:
 
     
     def analyse_references(self):
-        print("Stats: ", '\n')
-        print("Number of gohper directories on the server:", self.gopher_dirs)
-        
-        print("Number of simple text files:", len(self.simple_text_files),"List of full paths:", self.simple_text_files)
-        print("Contents of the smallest text file:", self.smallest_text_file_content)
-        print("Size of the largest text file:", self.largest_text_file_size)
 
-        print("Number of simple binary files:", len(self.binary_files),"List of full paths:",self.binary_files)
-        print("Size of the smallest binary file:", self.smallest_binary_file_size)
-        print("Size of the largest binary file:", self.largest_binary_file_size)
+        print("################################################################")
+        print("Stats: ", '\n')
+        print("Number of gohper directories on the server:", self.gopher_dirs,'\n')
+        
+        print("Number of simple text files:", len(self.simple_text_files),"List of full paths:", '\n', self.simple_text_files,'\n')
+
+        print("Contents of the smallest text file:", self.smallest_text_file_content, '\n')
+        print("Size of the largest text file:", self.largest_text_file_size, '\n')
+
+        print("Number of simple binary files:", len(self.binary_files),"List of full paths:", '\n',self.binary_files, '\n')
+
+        print("Size of the smallest binary file:", self.smallest_binary_file_size,'\n')
+        print("Size of the largest binary file:", self.largest_binary_file_size,'\n')
    
         
-        print("Number of invalid references:", len(self.unique_invalid_references))
+        print("Number of invalid references:", len(self.unique_invalid_references), '\n')
 
-        print("List of external servers:", self.external_servers)
+        print("List of external servers:", self.external_servers, '\n')
+
+        print("################################################################")
